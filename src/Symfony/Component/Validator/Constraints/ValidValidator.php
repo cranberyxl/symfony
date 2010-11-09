@@ -42,6 +42,12 @@ class ValidValidator extends ConstraintValidator
         } else {
             $metadata = $factory->getClassMetadata(get_class($value));
             $walker->walkClass($metadata, $value, $group, $propertyPath);
+
+            if ($value instanceof \Traversable) {
+                foreach ($value as $key => $element) {
+                    $walker->walkConstraint($constraint, $element, $group, $propertyPath.'['.$key.']');
+                }
+            }
         }
 
         return true;
